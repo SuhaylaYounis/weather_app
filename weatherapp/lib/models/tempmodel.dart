@@ -4,5 +4,5 @@ class tempmodel{
   var weather_state_abbr;
   var applicable_date;
 
-  tempmodel({this.min_temp, this.max_temp, this.applicable_date, this.weather_state_abbr});
+  tempmodel({this.min_temp,this.max_temp,this.applicable_date, this.weather_state_abbr});
 }

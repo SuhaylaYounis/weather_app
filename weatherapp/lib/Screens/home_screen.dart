@@ -45,16 +45,17 @@ class _home_screenState extends State<home_screen> {
       print(weather);
       abbr = responsebody[0]["weather_state_abbr"];
     });
-    List<tempmodel> lists = [];
+    List<tempmodel> list = [];
     for (var i in responsebody) {
       tempmodel x = tempmodel(
           applicable_date: i["applicable_date"],
           max_temp: i["max_temp"],
           min_temp: i["min_temp"],
           weather_state_abbr: i["weather_state_abbr"]);
-      lists.add(x);
+      list.add(x);
+      print(list);
     }
-    return lists;
+    return list;
   }
 
   //method toi call city and temp methods
@@ -66,128 +67,162 @@ class _home_screenState extends State<home_screen> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.white,
+      decoration: BoxDecoration(
+          image: DecorationImage(
+        image: AssetImage("images/${weather}.png"),
+        fit: BoxFit.cover,
+      )),
       child: Scaffold(
         //to avoid overriding of pixels
         resizeToAvoidBottomInset: false,
-        backgroundColor: Colors.white,
-        body: Column(
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                //for the city names
-                Center(
-                  child: Text(
-                    "$city",
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 40.0,
-                      fontWeight: FontWeight.w400,
-                      fontStyle: FontStyle.normal,
-                    ),
-                  ),
-                ),
-                //for the city condition icon
-                Center(
-                  child: Image.network(
-                    "https://www.metaweather.com/static/img/weather/png/$abbr.png",
-                    alignment: Alignment.topCenter,
-                    height: 200,
-                    width: 200,
-                  ),
-                ),
-                // for the city temperature
-                Center(
-                  child: Text(
-                    "$temperature °",
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 70.0,
-                      fontWeight: FontWeight.w400,
-                      fontStyle: FontStyle.normal,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            //for the search bar
-            Column(
-              children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: TextField(
-                    onSubmitted: (String input) {
-                      print("$input");
-                      onTextFeildSubmit(input);
-                    },
-                    style: const TextStyle(
-                        fontStyle: FontStyle.normal, fontSize: 20.0),
-                    decoration: const InputDecoration(
-                      hintText: "search location",
-                      hintStyle: TextStyle(
-                        fontSize: 18,
+        backgroundColor: Colors.transparent,
+        body: ListView(scrollDirection: Axis.vertical, children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              //for the city names
+              Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Center(
+                      child: Text(
+                        "$city",
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 50.0,
+                          fontWeight: FontWeight.w400,
+                          fontStyle: FontStyle.normal,
+                        ),
                       ),
-                      prefixIcon: Icon(Icons.search_outlined),
                     ),
                   ),
-                ),
-                Container(
-                  height: 170,
-                  padding:
-                  const EdgeInsets.symmetric(horizontal: 5.0, vertical: 20.0),
-                  child: FutureBuilder(
-                    future: fetchTemperature(),
-                    builder:
-                        (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-                      if (snapshot.data == null) {
-                        return const Text(" null");
-                      }
-                      else if(snapshot.hasData){
-                        return ListView.builder(
-                          scrollDirection:Axis.horizontal ,
-                          itemCount: snapshot.data.length,
-                          itemBuilder:( BuildContext context, int index){
-                            return Card(
-                              color: Colors.transparent,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20.0),
-                              ),
-                              child: Container(
-                                height:170,
-
-                                child:Column(
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Text("Date:${snapshot.data[index].applicable_data}",style: const TextStyle(color: Colors.black, fontSize: 12),textAlign: TextAlign.center,),
-                                    Image.network(
-                                      "https://www.metaweather.com/static/img/weather/png/${snapshot.data[index].weather_state_abbr}.png",
-                                      alignment: Alignment.topCenter,
-                                      height: 50,
-                                      width: 200,
-                                    ),
-                                    Text("Min:${snapshot.data[index].min_temp.round()}",style: const TextStyle(color: Colors.black, fontSize: 12),textAlign: TextAlign.center,),
-                                    Text("Max:${snapshot.data[index].max_temp.round()}",style: const TextStyle(color: Colors.black, fontSize: 12),textAlign: TextAlign.center,),
-                                    Text("Date:${snapshot.data[index].applicable_data}",style: const TextStyle(color: Colors.black, fontSize: 12),textAlign: TextAlign.center,),
-                                  ],
-                                ),
-                              ),
-                            );
-                          }, );
-                      }
-                      else{
-                        return const Text(" nullll");
-                      }
-                    },
+                  //for the city condition icon
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20),
+                    child: Center(
+                      child: Image.network(
+                        "https://www.metaweather.com/static/img/weather/png/$abbr.png",
+                        alignment: Alignment.topCenter,
+                        height: 200,
+                        width: 200,
+                      ),
+                    ),
                   ),
-                )
-              ],
-            ),
 
-          ],
-        ),
+                  // for the city temperature
+                  Padding(
+                    padding: const EdgeInsets.only(top:10.0,left:30.0),
+                    child: Center(
+                      child: Text(
+                        "$temperature °",
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 70.0,
+                          fontWeight: FontWeight.w400,
+                          fontStyle: FontStyle.normal,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+
+              //for the search bar
+              Column(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: TextField(
+                      onSubmitted: (String input) {
+                        print("$input");
+                        onTextFeildSubmit(input);
+                      },
+                      style: const TextStyle(
+                          fontStyle: FontStyle.normal, fontSize: 20.0),
+                      decoration: const InputDecoration(
+                        hintText: "search location",
+                        hintStyle: TextStyle(
+                          fontSize: 18,
+                        ),
+                        prefixIcon: Icon(Icons.search_outlined),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    height: 170,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 5.0, vertical: 20.0),
+                    child: FutureBuilder(
+                      future: fetchTemperature(),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<dynamic> snapshot) {
+                        if (snapshot.hasData) {
+                          return ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: snapshot.data.length,
+                            itemBuilder: ( context, index) {
+                              return Card(
+                                color: Colors.transparent,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20.0),
+                                ),
+                                child: Container(
+                                  height: 170,
+                                  child: Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        "Date:${snapshot.data[index].applicable_data}",
+                                        style: const TextStyle(
+                                            color: Colors.black, fontSize: 12),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      Image.network(
+                                        "https://www.metaweather.com/static/img/weather/png/${snapshot.data[index].weather_state_abbr}.png",
+                                        alignment: Alignment.topCenter,
+                                        height: 50,
+                                        width: 200,
+                                      ),
+                                      Text(
+                                        "Min:${snapshot.data[index].min_temp.round()}",
+                                        style: const TextStyle(
+                                            color: Colors.black, fontSize: 12),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      Text(
+                                        "Max:${snapshot.data[index].max_temp.round()}",
+                                        style: const TextStyle(
+                                            color: Colors.black, fontSize: 12),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      Text(
+                                        "Date:${snapshot.data[index].applicable_data}",
+                                        style: const TextStyle(
+                                            color: Colors.black, fontSize: 12),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        } else {
+                          return const Text(" nullll");
+                        }
+                      },
+                    ),
+                  )
+                ],
+              ),
+            ],
+          ),
+        ]),
       ),
     );
   }
