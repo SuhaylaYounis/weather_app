@@ -16,7 +16,7 @@ class _home_screenState extends State<home_screen> {
   int temperature = 0;
   int woeid = 0;
   String city = "City";
-  String weather = "clear";
+  String weather = "Clear";
   String abbr = "c";
 
 //method to get the city name
@@ -38,11 +38,9 @@ class _home_screenState extends State<home_screen> {
     var responsebody = jsonDecode(response.body)["consolidated_weather"];
     setState(() {
       temperature = responsebody[0]["the_temp"].round();
-      print(temperature);
-      weather = responsebody[0]["weather_state_name"]
-          .replaceAll(" ", "")
-          .tolowercase();
-      print(weather);
+
+      weather = responsebody[0]["weather_state_name"];
+
       abbr = responsebody[0]["weather_state_abbr"];
     });
     List<tempmodel> list = [];
@@ -53,7 +51,7 @@ class _home_screenState extends State<home_screen> {
           min_temp: i["min_temp"],
           weather_state_abbr: i["weather_state_abbr"]);
       list.add(x);
-      print(list);
+
     }
     return list;
   }
@@ -177,7 +175,7 @@ class _home_screenState extends State<home_screen> {
                                         CrossAxisAlignment.center,
                                     children: [
                                       Text(
-                                        "Date:${snapshot.data[index].applicable_data}",
+                                        "Date:${snapshot.data[index].applicable_date}",
                                         style: const TextStyle(
                                             color: Colors.black, fontSize: 12),
                                         textAlign: TextAlign.center,
@@ -200,12 +198,7 @@ class _home_screenState extends State<home_screen> {
                                             color: Colors.black, fontSize: 12),
                                         textAlign: TextAlign.center,
                                       ),
-                                      Text(
-                                        "Date:${snapshot.data[index].applicable_data}",
-                                        style: const TextStyle(
-                                            color: Colors.black, fontSize: 12),
-                                        textAlign: TextAlign.center,
-                                      ),
+
                                     ],
                                   ),
                                 ),
@@ -213,7 +206,7 @@ class _home_screenState extends State<home_screen> {
                             },
                           );
                         } else {
-                          return const Text(" nullll");
+                          return const Text(" ");
                         }
                       },
                     ),
